@@ -4,11 +4,40 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PerfMonX.Views"
+             xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:oxy="http://oxyplot.org/wpf"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <oxy:PlotView Model="{Binding PlotModel}">
-        </oxy:PlotView>        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ToolBar>
+
+        </ToolBar>
+        <oxy:PlotView Grid.Row="1" Model="{Binding PlotModel}">
+        </oxy:PlotView>
+        <DataGrid Grid.Row="2" MaxHeight="200" AutoGenerateColumns="False" ItemsSource="{Binding RunningCounters}" SelectionMode="Single" VirtualizingPanel.IsVirtualizing="False"
+                  metro:ButtonHelper.PreserveTextCase="True" SelectionUnit="FullRow" >
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Show/Color" CanUserReorder="False" IsReadOnly="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid Background="{Binding ColorAsBrush}">
+                                <CheckBox Command="{Binding ToggleCheckCommand}" IsChecked="True" />
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Category" Binding="{Binding CategoryName, Mode=OneTime}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Counter" Binding="{Binding CounterName, Mode=OneTime}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Instance" Binding="{Binding InstanceName, Mode=OneTime}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Last Value" Binding="{Binding LastValue}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Minimum" Binding="{Binding MinValue}" />
+                <DataGridTextColumn Header="Maximum" Binding="{Binding MaxValue}" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>

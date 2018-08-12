@@ -8,22 +8,25 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 
 namespace PerfMonX.ViewModels {
 	sealed class GraphicTabViewModel : BindableBase, ITabViewModel {
 		public string Header => "Graph";
-		public string Icon => null;
+		public string Icon => "/icons/graph.ico";
 
-		DispatcherTimer _timer;
-		IList<RunningCounterViewModel> _counters;
+		Timer _timer;
+		DispatcherTimer _refreshTimer;
+
+		public IList<RunningCounterViewModel> RunningCounters { get; }
 
 		public PlotModel PlotModel { get; }
 
 		public GraphicTabViewModel(IList<RunningCounterViewModel> counters) {
 			PlotModel = new PlotModel();
-			_counters = counters;
+			RunningCounters = counters;
 
 			PlotModel.Axes.Add(new DateTimeAxis {
 				Position = AxisPosition.Bottom,
@@ -37,7 +40,7 @@ namespace PerfMonX.ViewModels {
 			});
 			PlotModel.Axes.Add(new LinearAxis {
 				Position = AxisPosition.Left,
-				Minimum = 0,
+				//Minimum = 0,
 				//Maximum = 100,
 				IsPanEnabled = false,
 				IsZoomEnabled = false
@@ -54,22 +57,35 @@ namespace PerfMonX.ViewModels {
 				var series = new LineSeries {
 					StrokeThickness = 1,
 					//MarkerStroke = OxyColors.Blue,
-					Color = colors[(index++) % colors.Length],
-					ItemsSource = counter.Points
+					Color = colors[index % colors.Length],
+					ItemsSource = counter.Points,
 				};
+				index++;
+				counter.Color = series.Color;
+				counter.Series = series;
 				PlotModel.Series.Add(series);
 			}
 
-			_timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-			_timer.Tick += _timer_Tick;
-			_timer.Start();
+			_refreshTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
+			_refreshTimer.Tick += OnRefresh;
+			_refreshTimer.Start();
+
+			var dispatcher = Dispatcher.CurrentDispatcher;
+			_timer = new Timer(delegate {
+				foreach (var counter in RunningCounters) {
+					if(counter.IsEnabled)
+						counter.Points.Add(DateTimeAxis.CreateDataPoint(DateTime.UtcNow, counter.NextValue));
+				}
+				dispatcher.InvokeAsync(() => {
+					PlotModel.InvalidatePlot(true);
+				});
+			}, null, 0, 500);
+
 		}
 
-		private void _timer_Tick(object sender, EventArgs e) {
-			foreach (var counter in _counters) {
-				counter.Points.Add(DateTimeAxis.CreateDataPoint(DateTime.UtcNow, counter.NextValue));
-			}
-			PlotModel.InvalidatePlot(true);
+		private void OnRefresh(object sender, EventArgs e) {
+			foreach (var counter in RunningCounters)
+				counter.Refresh();
 		}
 	}
 }

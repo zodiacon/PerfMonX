@@ -15,7 +15,7 @@ using System.Windows.Data;
 namespace PerfMonX.ViewModels {
 	sealed class ConfigureTabViewModel : BindableBase, ITabViewModel {
 		public string Header => "Configuration";
-		public string Icon => null;
+		public string Icon => "/icons/config.ico";
 
 		private string _machineName = ".";
 

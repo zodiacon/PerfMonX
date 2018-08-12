@@ -112,7 +112,7 @@
                 <Separator />
                 <Button Command="{Binding RunCountersCommand}" >
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/icons/delete.ico" Style="{StaticResource iconStyle}" />
+                        <Image Source="/icons/execute.ico" Style="{StaticResource iconStyle}" />
                         <TextBlock Text="Run!" Margin="4,0,0,0" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>

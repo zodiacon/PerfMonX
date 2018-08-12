@@ -21,5 +21,6 @@ namespace PerfMonX.Views {
 		public GraphicTabView() {
 			InitializeComponent();
 		}
+
 	}
 }

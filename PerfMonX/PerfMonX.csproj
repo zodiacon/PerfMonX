@@ -187,5 +187,17 @@
     <Resource Include="Icons\select_invert.ico" />
     <Resource Include="Icons\select_none.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\execute.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\favorite.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\config.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\graph.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
