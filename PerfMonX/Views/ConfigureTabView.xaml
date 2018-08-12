@@ -1,0 +1,131 @@
+﻿<UserControl x:Class="PerfMonX.Views.ConfigureTabView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PerfMonX.Views"
+             xmlns:b="clr-namespace:PerfMonX.Behaviors"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="250"/>
+            <ColumnDefinition Width="8" />
+            <ColumnDefinition Width="Auto" MinWidth="250"/>
+            <ColumnDefinition Width="8" />
+            <ColumnDefinition Width="Auto" MinWidth="250"/>
+            <ColumnDefinition Width="8" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <DockPanel Margin="2">
+            <TextBlock Text="Categories" DockPanel.Dock="Left" VerticalAlignment="Center" FontWeight="Bold" />
+            <TextBox Text="{Binding SearchCategoryText, Delay=400, UpdateSourceTrigger=PropertyChanged}" Margin="6,0,0,0" metro:TextBoxHelper.Watermark="Type to filter categories"
+                 metro:TextBoxHelper.ClearTextButton="True" />
+        </DockPanel>
+        <ListBox Grid.Row="1" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" VirtualizingPanel.IsVirtualizing="False">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/icons/multiinstance.ico" Width="16" Height="16" x:Name="multiInstanceImage" Visibility="Collapsed" />
+                        <Image Source="/icons/singleinstance.ico" Width="16" Height="16" x:Name="singleInstanceImage" />
+                        <TextBlock Text="{Binding Category.CategoryName}" Margin="4,0,0,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsMultiInstance}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed" TargetName="singleInstanceImage" />
+                            <Setter Property="Visibility" Value="Visible" TargetName="multiInstanceImage" />
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        
+        <Rectangle Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="2" Fill="{DynamicResource AccentColorBrush2}" />
+        
+        <DockPanel Grid.Column="2">
+            <TextBlock Text="Counters" DockPanel.Dock="Left" VerticalAlignment="Center" FontWeight="Bold" />
+            <TextBox Text="{Binding SearchCounterText, Delay=400, UpdateSourceTrigger=PropertyChanged}" Margin="6,0,0,0" metro:TextBoxHelper.Watermark="Type to filter counters"
+                 metro:TextBoxHelper.ClearTextButton="True" />
+        </DockPanel>
+        <ListBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding Counters}" SelectionMode="Extended" VirtualizingPanel.IsVirtualizing="False">
+            <i:Interaction.Behaviors>
+                <b:ListBoxBehavior SelectedItems="{Binding SelectedCounters, Mode=TwoWay}" />
+            </i:Interaction.Behaviors>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Counter.CounterName}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Rectangle Grid.Row="0" Grid.RowSpan="3" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="2" Fill="{DynamicResource AccentColorBrush2}" />
+
+        <DockPanel Grid.Column="4" >
+            <TextBlock Text="Instances" DockPanel.Dock="Left" VerticalAlignment="Center" FontWeight="Bold" />
+            <TextBox Text="{Binding SearchInstanceText, Delay=400, UpdateSourceTrigger=PropertyChanged}" Margin="6,0,0,0" metro:TextBoxHelper.Watermark="Type to filter instances"
+                 metro:TextBoxHelper.ClearTextButton="True" />
+        </DockPanel>
+        <ListBox Grid.Row="1" Grid.Column="4" ItemsSource="{Binding Instances}" SelectionMode="Extended" >
+            <i:Interaction.Behaviors>
+                <b:ListBoxBehavior SelectedItems="{Binding SelectedInstances, Mode=TwoWay}" />
+            </i:Interaction.Behaviors>
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Rectangle Grid.Row="0" Grid.RowSpan="3" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="2" Fill="{DynamicResource AccentColorBrush2}" />
+
+        <DockPanel Grid.Column="6" Grid.Row="0" Grid.RowSpan="3">
+            <ToolBar DockPanel.Dock="Top">
+                <ToolBar.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="FontSize" Value="14" />
+                    </Style>
+                    <Style TargetType="Image" x:Key="iconStyle">
+                        <Setter Property="Width" Value="24" />
+                        <Setter Property="Height" Value="24" />
+                    </Style>
+                </ToolBar.Resources>
+                <Button Command="{Binding AddCountersCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/icons/add.ico" Style="{StaticResource iconStyle}" />
+                        <TextBlock Text="Add" Margin="4,0,0,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <Separator />
+                <Button Command="{Binding DeleteCountersCommand}" >
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/icons/delete.ico" Style="{StaticResource iconStyle}" />
+                        <TextBlock Text="Delete" Margin="4,0,0,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <Separator />
+                <Button Command="{Binding RunCountersCommand}" >
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/icons/delete.ico" Style="{StaticResource iconStyle}" />
+                        <TextBlock Text="Run!" Margin="4,0,0,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+
+            <DataGrid Margin="2" Grid.Row="1" Grid.Column="6" metro:ButtonHelper.PreserveTextCase="True" ItemsSource="{Binding ActualCounters}" AutoGenerateColumns="False" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Category" Binding="{Binding Counter.CategoryName}" MinWidth="100" />
+                    <DataGridTextColumn Header="Counter" Binding="{Binding Counter.CounterName}" MinWidth="100" />
+                    <DataGridTextColumn Header="Instance" Binding="{Binding Counter.InstanceName}" MinWidth="100" />
+                    <!--<DataGridTextColumn Header="Color" Binding="{Binding Color}" />-->
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+    </Grid>
+</UserControl>
