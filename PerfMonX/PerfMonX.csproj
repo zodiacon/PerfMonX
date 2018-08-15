@@ -84,6 +84,8 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Interfaces\IMainViewModel.cs" />
     <Compile Include="Models\MonitoredCounter.cs" />
+    <Compile Include="Models\UpdateInterval.cs" />
+    <Compile Include="ViewModels\AccentViewModel.cs" />
     <Compile Include="ViewModels\ConfigureTabViewModel.cs" />
     <Compile Include="ViewModels\GraphicTabViewModel.cs" />
     <Compile Include="ViewModels\PerformanceCounterTabViewModel.cs" />
@@ -170,8 +172,8 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\multiinstance.ico" />
-    <Resource Include="Icons\debug_break_all.ico" />
-    <Resource Include="Icons\debug_start.ico" />
+    <Resource Include="Icons\pause.ico" />
+    <Resource Include="Icons\run.ico" />
     <Resource Include="Icons\field.ico" />
     <Resource Include="Icons\object.ico" />
     <Resource Include="Icons\resources.ico" />
@@ -198,6 +200,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\graph.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\pin_red.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\close.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -9,4 +9,10 @@
     <DataTemplate DataType="{x:Type vm:GraphicTabViewModel}">
         <view:GraphicTabView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:AccentViewModel}">
+        <StackPanel Orientation="Horizontal">
+            <Ellipse StrokeThickness="1" Stroke="{DynamicResource BlackBrush}" Fill="{Binding Brush}" Width="16" Height="16" />
+            <TextBlock Margin="4,0,0,0" Text="{Binding Name}" VerticalAlignment="Center" />
+        </StackPanel>
+    </DataTemplate>
 </ResourceDictionary>

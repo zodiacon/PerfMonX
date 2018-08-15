@@ -10,5 +10,6 @@ namespace PerfMonX.ViewModels {
 	sealed class PerformanceCounterTabViewModel : BindableBase, ITabViewModel {
 		public string Header => "Counters";
 		public string Icon => "/icons/counters.ico";
+		public bool CanClose => true;
 	}
 }

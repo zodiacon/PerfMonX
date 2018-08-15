@@ -12,7 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 namespace PerfMonX.ViewModels {
-	sealed class RunningCounterViewModel : BindableBase {
+	sealed class RunningCounterViewModel : BindableBase, IDisposable {
 		public PerformanceCounter Counter { get; }
 		public List<DataPoint> Points { get; } = new List<DataPoint>(120);
 
@@ -92,6 +92,10 @@ namespace PerfMonX.ViewModels {
 				RaisePropertyChanged(nameof(MaxValue));
 				_maxValueChanged = false;
 			}
+		}
+
+		public void Dispose() {
+			Counter.Dispose();
 		}
 
 		public DelegateCommandBase ToggleCheckCommand => new DelegateCommand(() => IsVisible = !IsVisible);

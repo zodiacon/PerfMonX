@@ -16,6 +16,7 @@ namespace PerfMonX.ViewModels {
 	sealed class ConfigureTabViewModel : BindableBase, ITabViewModel {
 		public string Header => "Configuration";
 		public string Icon => "/icons/config.ico";
+		public bool CanClose => false;
 
 		private string _machineName = ".";
 
@@ -123,7 +124,7 @@ namespace PerfMonX.ViewModels {
 					return;
 				}
 
-				var tab = new GraphicTabViewModel(ActualCounters.ToList());
+				var tab = new GraphicTabViewModel(MainViewModel, ActualCounters.ToList());
 				MainViewModel.Tabs.Add(tab);
 				MainViewModel.SelectedTab = tab;
 				ActualCounters.Clear();

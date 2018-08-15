@@ -6,16 +6,14 @@
         xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:local="clr-namespace:PerfMonX"
         xmlns:view="clr-namespace:PerfMonX.Views"
-        mc:Ignorable="d"
+        mc:Ignorable="d" x:Name="This"
         Title="Performance Monitor X v0.1 (C)2018 by Pavel Yosifovich" MinHeight="400" MinWidth="600" TitleCaps="False"
                    Icon="/icons/app.ico"
         BorderThickness="1" BorderBrush="{DynamicResource AccentColorBrush}">
-    <Grid>
-        <view:MainView />
-    </Grid>
+    <view:MainView />
     <metro:MetroWindow.RightWindowCommands>
         <metro:WindowCommands>
-            <ToggleButton Style="{StaticResource MetroToggleButton}" IsChecked="{Binding IsAlwaysOnTop}" ToolTip="Always On Top">
+            <ToggleButton Style="{StaticResource MetroToggleButton}" Command="{Binding AlwaysOnTopCommand}" CommandParameter="{Binding ElementName=This}" ToolTip="Always On Top">
                 <Image Source="/Icons/pin_red.ico" Width="16" Height="16" />
             </ToggleButton>
             <metro:DropDownButton Content="Accent Color" ItemsSource="{Binding Accents}" >

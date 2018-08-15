@@ -8,5 +8,6 @@ namespace PerfMonX.Interfaces {
     interface ITabViewModel {
         string Header { get; }
         string Icon { get; }
+		bool CanClose { get; }
     }
 }
