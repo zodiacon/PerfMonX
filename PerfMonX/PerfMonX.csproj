@@ -207,5 +207,8 @@
   <ItemGroup>
     <Resource Include="Icons\close.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\reset.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

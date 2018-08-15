@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Threading;
 
 namespace PerfMonX.ViewModels {
@@ -113,6 +114,12 @@ namespace PerfMonX.ViewModels {
 					counter.Points.Add(DateTimeAxis.CreateDataPoint(DateTime.UtcNow, counter.NextValue));
 			}
 			_dispatcher.InvokeAsync(() => {
+				var now = DateTimeAxis.ToDouble(DateTime.UtcNow);
+				var range = _timeAxis.Maximum - _timeAxis.Minimum;
+				if (now > _timeAxis.Maximum - range / 4)
+					_timeAxis.Minimum = now - range * .75;
+				else if (now < _timeAxis.Minimum)
+					_timeAxis.Minimum = now;
 				PlotModel.InvalidatePlot(true);
 			});
 		}
@@ -133,8 +140,6 @@ namespace PerfMonX.ViewModels {
 					}
 					else {
 						_timer = new Timer(_ => Update(), null, 0, Interval);
-						//foreach(var counter in RunningCounters)
-							//counter.Series.
 					}
 				}
 			}
@@ -154,7 +159,13 @@ namespace PerfMonX.ViewModels {
 			}
 		});
 
-		public DelegateCommandBase ClearCommand => new DelegateCommand(ClearAll);
+		public DelegateCommandBase ClearAllmmand => new DelegateCommand(() => {
+			if (RunningCounters.Any() && RunningCounters[0].Points.Count > 0) {
+				if (_mainViewModel.UI.MessageBoxService.ShowMessage("Clear all data?", Constants.Title, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+					return;
+			}
+			ClearAll();
+		});
 
 		private void ClearAll() {
 			foreach (var counter in RunningCounters) {
@@ -183,5 +194,7 @@ namespace PerfMonX.ViewModels {
 				}
 			}
 		}
+
+		public DelegateCommandBase ResetCommand => new DelegateCommand(() => _timeAxis.Reset());
 	}
 }

@@ -35,8 +35,8 @@
                         <Image Source="{Binding Icon}" Width="20" Height="20" />
                         <TextBlock Margin="4,0,0,0" Text="{Binding Header}" VerticalAlignment="Center" />
                         <Button Margin="6,0,0,0" Style="{StaticResource MetroButton}" metro:VisibilityHelper.IsVisible="{Binding CanClose}" Command="{Binding DataContext.CloseTabCommand, ElementName=This}"
-                                CommandParameter="{Binding}" BorderThickness="0" Background="{x:Null}" Padding="0">
-                            <Image Source="/icons/close.ico" Width="16" Height="16" />
+                                CommandParameter="{Binding}" BorderThickness="0" Background="{x:Null}" Padding="2" VerticalAlignment="Top">
+                            <Image Source="/icons/delete.ico" Width="16" Height="16" />
                         </Button>
                     </StackPanel>
                 </DataTemplate>

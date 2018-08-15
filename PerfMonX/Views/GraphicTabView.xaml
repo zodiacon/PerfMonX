@@ -16,8 +16,14 @@
         </Grid.RowDefinitions>
         <ToolBar>
             <ToggleButton  IsChecked="{Binding IsPaused}" ToolTip="Pause">
-                <Image Source="/icons/pause.ico" Width="20" Height="20" />
+                <Image Source="/icons/pause.ico" Width="24" Height="24" />
             </ToggleButton>
+            <Button  Command="{Binding ClearAllCommand}" ToolTip="Clear All">
+                <Image Source="/icons/delete.ico" Width="24" Height="24" />
+            </Button>
+            <Button Command="{Binding ResetCommand}" ToolTip="Reset View">
+                <Image Source="/icons/reset.ico" Width="24" Height="24" />
+            </Button>
             <Separator />
             <TextBlock Text="Update: " VerticalAlignment="Center" />
             <ComboBox Margin="2,0,0,0" Width="100" ItemsSource="{Binding UpdateIntervals}" DisplayMemberPath="Text" SelectedItem="{Binding UpdateInterval}" />
