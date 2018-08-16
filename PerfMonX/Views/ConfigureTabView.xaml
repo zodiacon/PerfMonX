@@ -8,6 +8,7 @@
              xmlns:b="clr-namespace:PerfMonX.Behaviors"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
+             xmlns:z="http://zodiacon.wpf/2016"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Margin="4">
         <Grid.RowDefinitions>
@@ -27,7 +28,7 @@
         <DockPanel Margin="2">
             <TextBlock Text="Categories" DockPanel.Dock="Left" VerticalAlignment="Center" FontWeight="Bold" />
             <TextBox Text="{Binding SearchCategoryText, Delay=400, UpdateSourceTrigger=PropertyChanged}" Margin="6,0,0,0" metro:TextBoxHelper.Watermark="Type to filter categories"
-                 metro:TextBoxHelper.ClearTextButton="True" />
+                 metro:TextBoxHelper.ClearTextButton="True" z:FocusProperties.FocusOnLoad="True" />
         </DockPanel>
         <ListBox Grid.Row="1" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" VirtualizingPanel.IsVirtualizing="False">
             <ListBox.ItemTemplate>

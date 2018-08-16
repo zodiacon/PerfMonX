@@ -6,15 +6,36 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using System.Windows.Media;
 
 namespace PerfMonX.ViewModels {
 	sealed class RunningCounterViewModel : BindableBase, IDisposable {
 		public PerformanceCounter Counter { get; }
 		public List<DataPoint> Points { get; } = new List<DataPoint>(120);
+
+		LineThickness[] _strokeThicknessValues;
+		public LineThickness[] StrokeThicknessValues => _strokeThicknessValues;
+
+		LineThickness _strokeThickness;
+		public LineThickness StrokeThickness {
+			get => _strokeThickness ?? (_strokeThickness = _strokeThicknessValues[0]);
+			set {
+				if (SetProperty(ref _strokeThickness, value)) {
+					Series.StrokeThickness = value.Thickness;
+				}
+			}
+		}
+
+		float _scale = 1;
+		public float Scale {
+			get => _scale;
+			set {
+				if (SetProperty(ref _scale, value)) {
+					for (int i = 0; i < Points.Count; i++)
+						Points[i] = new DataPoint(Points[i].X, Points[i].Y / value);
+				}
+			}
+		}
 
 		public RunningCounterViewModel(PerformanceCounter pc) {
 			Counter = pc;
@@ -48,18 +69,23 @@ namespace PerfMonX.ViewModels {
 		public bool IsEnabled { get; private set; } = true;
 
 		public float LastValue { get; private set; }
-		public float MinValue { get; private set; }
-		public float MaxValue { get; private set; }
+		public float MinValue { get; private set; } = float.MaxValue;
+		public float MaxValue { get; private set; } = float.MinValue;
 
-		OxyColor _color;
+		OxyColor _lineColor;
 		Brush _brush;
 
-		public OxyColor Color {
-			get => _color;
+		public OxyColor LineColor {
+			get => _lineColor;
 			set {
-				if (SetProperty(ref _color, value)) {
-					_brush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(_color.R, _color.G, _color.B));
+				if (SetProperty(ref _lineColor, value)) {
+					_brush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(_lineColor.R, _lineColor.G, _lineColor.B));
+					_brush.Freeze();
+
 					RaisePropertyChanged(nameof(ColorAsBrush));
+
+					_strokeThicknessValues = Enumerable.Range(1, 5).Select(i => new LineThickness { Thickness = i, Brush = _brush }).ToArray();
+					RaisePropertyChanged(nameof(StrokeThicknessValues));
 				}
 			}
 		}
@@ -76,7 +102,7 @@ namespace PerfMonX.ViewModels {
 			}
 		}
 
-		public Series Series { get; set; }
+		public LineSeries Series { get; set; }
 
 		public string CategoryName => Counter.CategoryName;
 		public string CounterName => Counter.CounterName;

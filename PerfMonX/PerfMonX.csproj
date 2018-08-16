@@ -88,6 +88,7 @@
     <Compile Include="ViewModels\AccentViewModel.cs" />
     <Compile Include="ViewModels\ConfigureTabViewModel.cs" />
     <Compile Include="ViewModels\GraphicTabViewModel.cs" />
+    <Compile Include="ViewModels\LineThickness.cs" />
     <Compile Include="ViewModels\PerformanceCounterTabViewModel.cs" />
     <Compile Include="Interfaces\ITabViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />

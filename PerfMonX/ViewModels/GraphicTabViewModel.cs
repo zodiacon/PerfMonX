@@ -47,16 +47,19 @@ namespace PerfMonX.ViewModels {
 			PlotModel = new PlotModel();
 			RunningCounters = counters;
 
+			var now = DateTimeAxis.ToDouble(DateTime.UtcNow);
+
 			_timeAxis = new DateTimeAxis {
 				Position = AxisPosition.Bottom,
-				Minimum = DateTimeAxis.ToDouble(DateTime.UtcNow),
-				AbsoluteMinimum = DateTimeAxis.ToDouble(DateTime.UtcNow),
-				Maximum = DateTimeAxis.ToDouble(DateTime.UtcNow.AddMinutes(1)),
+				//Minimum = now,
+				AbsoluteMinimum = now,
+				//Maximum = DateTimeAxis.ToDouble(DateTime.UtcNow.AddMinutes(1)) + now,
 				Title = "Time",
 				TimeZone = TimeZoneInfo.Local,
-				MaximumRange = DateTimeAxis.ToDouble(DateTime.UtcNow.AddMinutes(10)) - DateTimeAxis.ToDouble(DateTime.UtcNow),
-				MinimumRange = DateTimeAxis.ToDouble(DateTime.UtcNow.AddSeconds(10)) - DateTimeAxis.ToDouble(DateTime.UtcNow)
+				MaximumRange = DateTimeAxis.ToDouble(DateTime.UtcNow.AddMinutes(5)) - now,
+				MinimumRange = DateTimeAxis.ToDouble(DateTime.UtcNow.AddSeconds(60)) - now,
 			};
+			_timeAxis.AxisChanged += OnTimeAxisChanged;
 
 			PlotModel.Axes.Add(_timeAxis);
 			PlotModel.Axes.Add(new LinearAxis {
@@ -64,7 +67,8 @@ namespace PerfMonX.ViewModels {
 				//Minimum = 0,
 				//Maximum = 100,
 				IsPanEnabled = false,
-				IsZoomEnabled = false
+				IsZoomEnabled = false,
+				Title = "Value",
 			});
 
 			var colors = new OxyColor[] {
@@ -82,7 +86,7 @@ namespace PerfMonX.ViewModels {
 					ItemsSource = counter.Points,
 				};
 				index++;
-				counter.Color = series.Color;
+				counter.LineColor = series.Color;
 				counter.Series = series;
 				PlotModel.Series.Add(series);
 			}
@@ -94,6 +98,10 @@ namespace PerfMonX.ViewModels {
 			var dispatcher = Dispatcher.CurrentDispatcher;
 			_timer = new Timer(_ => Update(), null, 0, Interval);
 
+		}
+
+		private void OnTimeAxisChanged(object sender, AxisChangedEventArgs e) {
+			
 		}
 
 		public UpdateInterval[] UpdateIntervals => _updateIntervals;
@@ -115,11 +123,9 @@ namespace PerfMonX.ViewModels {
 			}
 			_dispatcher.InvokeAsync(() => {
 				var now = DateTimeAxis.ToDouble(DateTime.UtcNow);
-				var range = _timeAxis.Maximum - _timeAxis.Minimum;
-				if (now > _timeAxis.Maximum - range / 4)
-					_timeAxis.Minimum = now - range * .75;
-				else if (now < _timeAxis.Minimum)
-					_timeAxis.Minimum = now;
+				var window = DateTimeAxis.ToDouble(DateTime.UtcNow.AddMinutes(1)) - DateTimeAxis.ToDouble(DateTime.UtcNow);
+				_timeAxis.Minimum = now - window * .95;
+				_timeAxis.Maximum = now + window * .05;
 				PlotModel.InvalidatePlot(true);
 			});
 		}
@@ -159,7 +165,7 @@ namespace PerfMonX.ViewModels {
 			}
 		});
 
-		public DelegateCommandBase ClearAllmmand => new DelegateCommand(() => {
+		public DelegateCommandBase ClearAllCommand => new DelegateCommand(() => {
 			if (RunningCounters.Any() && RunningCounters[0].Points.Count > 0) {
 				if (_mainViewModel.UI.MessageBoxService.ShowMessage("Clear all data?", Constants.Title, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
 					return;
@@ -172,6 +178,7 @@ namespace PerfMonX.ViewModels {
 				counter.Points.Clear();
 			}
 			_timeAxis.Minimum = _timeAxis.AbsoluteMinimum = DateTimeAxis.ToDouble(DateTime.UtcNow);
+			_timeAxis.Reset();
 		}
 
 		void ExportToFile(string filename) {

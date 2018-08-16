@@ -6,7 +6,7 @@
         xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:local="clr-namespace:PerfMonX"
         xmlns:view="clr-namespace:PerfMonX.Views"
-        mc:Ignorable="d" x:Name="This"
+        mc:Ignorable="d" x:Name="This" ResizeMode="CanResizeWithGrip"
         Title="Performance Monitor X v0.1 (C)2018 by Pavel Yosifovich" MinHeight="400" MinWidth="600" TitleCaps="False"
                    Icon="/icons/app.ico"
         BorderThickness="1" BorderBrush="{DynamicResource AccentColorBrush}">

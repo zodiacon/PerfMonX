@@ -26,7 +26,7 @@
             </Button>
             <Separator />
             <TextBlock Text="Update: " VerticalAlignment="Center" />
-            <ComboBox Margin="2,0,0,0" Width="100" ItemsSource="{Binding UpdateIntervals}" DisplayMemberPath="Text" SelectedItem="{Binding UpdateInterval}" />
+            <ComboBox Margin="2,0,0,0" Width="100" ItemsSource="{Binding UpdateIntervals}" DisplayMemberPath="Text" SelectedItem="{Binding UpdateInterval, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </ToolBar>
         <oxy:PlotView Grid.Row="1" Model="{Binding PlotModel}">
         </oxy:PlotView>
@@ -46,8 +46,21 @@
                 <DataGridTextColumn Header="Counter" Binding="{Binding CounterName, Mode=OneTime}" IsReadOnly="True" />
                 <DataGridTextColumn Header="Instance" Binding="{Binding InstanceName, Mode=OneTime}" IsReadOnly="True" />
                 <DataGridTextColumn Header="Last Value" Binding="{Binding LastValue}" IsReadOnly="True" />
-                <DataGridTextColumn Header="Minimum" Binding="{Binding MinValue}" />
-                <DataGridTextColumn Header="Maximum" Binding="{Binding MaxValue}" />
+                <DataGridTextColumn Header="Minimum" Binding="{Binding MinValue}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Maximum" Binding="{Binding MaxValue}" IsReadOnly="True" />
+                <DataGridTemplateColumn Header="Line Style" Width="80" CanUserResize="False" SortMemberPath="Thickness">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding StrokeThicknessValues}" SelectedItem="{Binding StrokeThickness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Rectangle Width="70" Height="{Binding Thickness}" Fill="{Binding Brush}" Stroke="{x:Null}" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
