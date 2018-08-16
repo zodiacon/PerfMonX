@@ -23,10 +23,11 @@
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TabControl Grid.Row="2" Margin="4" ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedTab, Mode=TwoWay}" z:TabControlProperties.IsCached="True">
+        <TabControl Grid.Row="2" Margin="4" ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedTab, Mode=TwoWay}" z:TabControlProperties.IsCached="True"
+                    metro:TabControlHelper.Underlined="TabPanel">
             <TabControl.ItemContainerStyle>
-                <Style TargetType="{x:Type TabItem}">
-                    <Setter Property="FontSize" Value="14" />
+                <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
+                    <Setter Property="metro:ControlsHelper.HeaderFontSize" Value="14" />
                 </Style>
             </TabControl.ItemContainerStyle>
             <TabControl.ItemTemplate>
