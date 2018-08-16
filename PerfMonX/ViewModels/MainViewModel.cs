@@ -17,6 +17,7 @@ namespace PerfMonX.ViewModels {
 
 		public IList<RunningCounterViewModel> RunningCounters => _runningCounters;
 		public AccentViewModel[] Accents => ThemeManager.Accents.Select(a => new AccentViewModel(a)).ToArray();
+		public AppTheme[] Themes => ThemeManager.AppThemes.ToArray();
 
 		AccentViewModel _currentAccent;
 
@@ -29,6 +30,13 @@ namespace PerfMonX.ViewModels {
 			accent.IsCurrent = true;
 			RaisePropertyChanged(nameof(CurrentAccent));
 		}, accent => accent != _currentAccent).ObservesProperty(() => CurrentAccent);
+
+		public ICommand ChangeThemeCommand => new DelegateCommand<AppTheme>(theme => {
+			var style = ThemeManager.DetectAppStyle();
+			if (theme != style.Item1) {
+				ThemeManager.ChangeAppStyle(Application.Current, style.Item2, theme);
+			}
+		});
 
 		public IList<ITabViewModel> Tabs => _tabs;
 		public IUIServices UI { get; }

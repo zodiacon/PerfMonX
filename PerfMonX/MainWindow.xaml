@@ -5,17 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:local="clr-namespace:PerfMonX"
+        xmlns:z="http://zodiacon.wpf/2016"
         xmlns:view="clr-namespace:PerfMonX.Views"
         mc:Ignorable="d" x:Name="This" ResizeMode="CanResizeWithGrip"
-        Title="Performance Monitor X v0.1 (C)2018 by Pavel Yosifovich" MinHeight="400" MinWidth="600" TitleCaps="False"
-                   Icon="/icons/app.ico"
+        Title="Performance Monitor X v0.2 Beta (C)2018 by Pavel Yosifovich" MinHeight="400" MinWidth="600" TitleCaps="False" Icon="/icons/app.ico" 
         BorderThickness="1" BorderBrush="{DynamicResource AccentColorBrush}">
+    <metro:MetroWindow.Resources>
+        <z:BindingProxy x:Key="Proxy" Data="{Binding}" />
+    </metro:MetroWindow.Resources>
     <view:MainView />
     <metro:MetroWindow.RightWindowCommands>
         <metro:WindowCommands>
             <ToggleButton Style="{StaticResource MetroToggleButton}" Command="{Binding AlwaysOnTopCommand}" CommandParameter="{Binding ElementName=This}" ToolTip="Always On Top">
                 <Image Source="/Icons/pin_red.ico" Width="16" Height="16" />
             </ToggleButton>
+            <metro:DropDownButton Content="Theme" ItemsSource="{Binding Themes}" DisplayMemberPath="Name">
+                <metro:DropDownButton.ItemContainerStyle>
+                    <Style TargetType="MenuItem" BasedOn="{StaticResource MetroMenuItem}">
+                        <Setter Property="Command" Value="{Binding Data.ChangeThemeCommand, Source={StaticResource Proxy}}" />
+                        <Setter Property="CommandParameter" Value="{Binding}" />
+                    </Style>
+                </metro:DropDownButton.ItemContainerStyle>
+            </metro:DropDownButton>
             <metro:DropDownButton Content="Accent Color" ItemsSource="{Binding Accents}" >
                 <metro:DropDownButton.ItemContainerStyle>
                     <Style TargetType="MenuItem" BasedOn="{StaticResource MetroMenuItem}">

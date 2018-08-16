@@ -84,6 +84,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Interfaces\IMainViewModel.cs" />
     <Compile Include="Models\MonitoredCounter.cs" />
+    <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\UpdateInterval.cs" />
     <Compile Include="ViewModels\AccentViewModel.cs" />
     <Compile Include="ViewModels\ConfigureTabViewModel.cs" />

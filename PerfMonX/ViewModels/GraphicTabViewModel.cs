@@ -8,6 +8,7 @@ using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -96,7 +97,7 @@ namespace PerfMonX.ViewModels {
 			_refreshTimer.Start();
 
 			var dispatcher = Dispatcher.CurrentDispatcher;
-			_timer = new Timer(_ => Update(), null, 0, Interval);
+			_timer = new Timer(_ => Update(), null, 0, UpdateInterval.Interval);
 
 		}
 
@@ -145,7 +146,8 @@ namespace PerfMonX.ViewModels {
 						_timer = null;
 					}
 					else {
-						_timer = new Timer(_ => Update(), null, 0, Interval);
+						Debug.Assert(_timer == null);
+						_timer = new Timer(_ => Update(), null, 0, UpdateInterval.Interval);
 					}
 				}
 			}
@@ -189,17 +191,6 @@ namespace PerfMonX.ViewModels {
 			_timer?.Dispose();
 			foreach (var counter in RunningCounters)
 				counter.Dispose();
-		}
-
-		int _interval = 1000;
-		public int Interval {
-			get => _interval;
-			set {
-				if (SetProperty(ref _interval, value)) {
-					if (_timer != null)
-						_timer.Change(value, value);
-				}
-			}
 		}
 
 		public DelegateCommandBase ResetCommand => new DelegateCommand(() => _timeAxis.Reset());
