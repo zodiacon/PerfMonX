@@ -27,7 +27,7 @@
                     metro:TabControlHelper.Underlined="TabPanel">
             <TabControl.ItemContainerStyle>
                 <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
-                    <Setter Property="FontSize" Value="14" />
+                    <Setter Property="metro:ControlsHelper.HeaderFontSize" Value="14" />
                 </Style>
             </TabControl.ItemContainerStyle>
             <TabControl.ItemTemplate>
