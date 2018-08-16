@@ -1,6 +1,7 @@
 ﻿<Application x:Class="PerfMonX.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:local="clr-namespace:PerfMonX"
              >
     <Application.Resources>
@@ -14,6 +15,8 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
                 <ResourceDictionary Source="/Resources/Templates.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            
+            <Style TargetType="{x:Type metro:WindowButtonCommands}" BasedOn="{StaticResource MahApps.Metro.Styles.WindowButtonCommands.Win10}" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
