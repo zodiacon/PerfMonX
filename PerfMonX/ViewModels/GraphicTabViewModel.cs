@@ -1,4 +1,5 @@
-﻿using OxyPlot;
+﻿using MahApps.Metro;
+using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using PerfMonX.Interfaces;
@@ -7,13 +8,11 @@ using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace PerfMonX.ViewModels {
@@ -26,6 +25,8 @@ namespace PerfMonX.ViewModels {
 		DispatcherTimer _refreshTimer;
 		Dispatcher _dispatcher;
 		DateTimeAxis _timeAxis;
+		LinearAxis _valueAxis;
+
 		IMainViewModel _mainViewModel;
 		static UpdateInterval[] _updateIntervals = new[]  {
 			new UpdateInterval { Interval = 100, Text = "100 msec" },
@@ -47,23 +48,23 @@ namespace PerfMonX.ViewModels {
 
 			PlotModel = new PlotModel();
 			RunningCounters = counters;
-
+			ThemeManager.IsThemeChanged += ThemeManager_IsThemeChanged;
 			var now = DateTimeAxis.ToDouble(DateTime.UtcNow);
 
 			_timeAxis = new DateTimeAxis {
 				Position = AxisPosition.Bottom,
-				//Minimum = now,
+				Minimum = now,
 				AbsoluteMinimum = now,
-				//Maximum = DateTimeAxis.ToDouble(DateTime.UtcNow.AddMinutes(1)) + now,
+				//Maximum = DateTimeAxis.ToDouble(DateTime.UtcNow.AddMinutes(1)),
 				Title = "Time",
 				TimeZone = TimeZoneInfo.Local,
 				MaximumRange = DateTimeAxis.ToDouble(DateTime.UtcNow.AddMinutes(5)) - now,
 				MinimumRange = DateTimeAxis.ToDouble(DateTime.UtcNow.AddSeconds(60)) - now,
 			};
-			_timeAxis.AxisChanged += OnTimeAxisChanged;
+			//_timeAxis.AxisChanged += OnTimeAxisChanged;
 
 			PlotModel.Axes.Add(_timeAxis);
-			PlotModel.Axes.Add(new LinearAxis {
+			PlotModel.Axes.Add(_valueAxis = new LinearAxis {
 				Position = AxisPosition.Left,
 				//Minimum = 0,
 				//Maximum = 100,
@@ -71,6 +72,13 @@ namespace PerfMonX.ViewModels {
 				IsZoomEnabled = false,
 				Title = "Value",
 			});
+
+			var style = ThemeManager.DetectAppStyle();
+			var color = (Color)style.Item1.Resources["BlackColor"];
+			var defaultColor = OxyColor.FromRgb(color.R, color.G, color.B);
+			color = (Color)style.Item1.Resources["WhiteColor"];
+			var inverseColor = OxyColor.FromRgb(color.R, color.G, color.B);
+			UpdateColors(defaultColor, inverseColor);
 
 			var colors = new OxyColor[] {
 				OxyColors.Red, OxyColors.Blue, OxyColors.Green, OxyColors.Orange, OxyColors.Brown, OxyColors.Cyan, OxyColors.Purple,
@@ -101,8 +109,27 @@ namespace PerfMonX.ViewModels {
 
 		}
 
+		private void ThemeManager_IsThemeChanged(object sender, OnThemeChangedEventArgs e) {
+			var color = (Color)e.AppTheme.Resources["BlackColor"];
+			var defaultColor = OxyColor.FromRgb(color.R, color.G, color.B);
+			color = (Color)e.AppTheme.Resources["WhiteColor"];
+			var inverseColor = OxyColor.FromRgb(color.R, color.G, color.B);
+			UpdateColors(defaultColor, inverseColor);
+		}
+
+		void UpdateColors(OxyColor color, OxyColor inverseColor) {
+			PlotModel.PlotAreaBorderColor = color;
+			PlotModel.TextColor = color;
+			_timeAxis.TicklineColor = color;
+			_timeAxis.AxislineColor = color;
+			_valueAxis.AxislineColor = color;
+			_valueAxis.TicklineColor = color;
+			PlotModel.PlotAreaBackground = inverseColor;
+			PlotModel.InvalidatePlot(false);
+		}
+
 		private void OnTimeAxisChanged(object sender, AxisChangedEventArgs e) {
-			
+
 		}
 
 		public UpdateInterval[] UpdateIntervals => _updateIntervals;
@@ -112,8 +139,7 @@ namespace PerfMonX.ViewModels {
 			get => _updateInterval;
 			set {
 				if (SetProperty(ref _updateInterval, value)) {
-					if (_timer != null)
-						_timer.Change(value.Interval, value.Interval);
+					_timer?.Change(value.Interval, value.Interval);
 				}
 			}
 		}
@@ -124,7 +150,7 @@ namespace PerfMonX.ViewModels {
 			}
 			_dispatcher.InvokeAsync(() => {
 				var now = DateTimeAxis.ToDouble(DateTime.UtcNow);
-				var window = DateTimeAxis.ToDouble(DateTime.UtcNow.AddMinutes(1)) - DateTimeAxis.ToDouble(DateTime.UtcNow);
+				var window = DateTimeAxis.ToDouble(DateTime.UtcNow.AddMinutes(1)) - now;
 				_timeAxis.Minimum = now - window * .95;
 				_timeAxis.Maximum = now + window * .05;
 				PlotModel.InvalidatePlot(true);
@@ -184,7 +210,7 @@ namespace PerfMonX.ViewModels {
 		}
 
 		void ExportToFile(string filename) {
-			
+
 		}
 
 		public void Dispose() {
@@ -194,5 +220,16 @@ namespace PerfMonX.ViewModels {
 		}
 
 		public DelegateCommandBase ResetCommand => new DelegateCommand(() => _timeAxis.Reset());
+
+		//Color _backgroundColor;
+		//public Color BackgroundColor {
+		//	get => _backgroundColor;
+		//	set {
+		//		if (SetProperty(ref _backgroundColor, value)) {
+		//			PlotModel.PlotAreaBackground = OxyColor.FromRgb(value.R, value.G, value.B);
+		//		}
+		//	}
+		//}
+
 	}
 }

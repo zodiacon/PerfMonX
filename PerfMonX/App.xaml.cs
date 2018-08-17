@@ -14,6 +14,8 @@ namespace PerfMonX {
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application {
+		MainViewModel _mainViewModel;
+
         protected override void OnStartup(StartupEventArgs e) {
 			Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
 
@@ -21,8 +23,16 @@ namespace PerfMonX {
             var vm = new MainViewModel(ui);
             var win = new MainWindow { DataContext = vm };
             ui.MessageBoxService.SetOwner(win);
+			vm.LoadSettings(win);
+			_mainViewModel = vm;
 
             win.Show();
         }
-    }
+
+		protected override void OnExit(ExitEventArgs e) {
+			_mainViewModel.SaveSettings();
+
+			base.OnExit(e);
+		}
+	}
 }

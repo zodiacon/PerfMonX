@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace PerfMonX.ViewModels {
 	sealed class ConfigureTabViewModel : BindableBase, ITabViewModel {
@@ -204,5 +205,6 @@ namespace PerfMonX.ViewModels {
 				}
 			}
 		}
+
 	}
 }
